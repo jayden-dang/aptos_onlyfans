@@ -1,0 +1,13 @@
+* Idols
+** Create Profiles
+*** Create Collections
+*** Create NFT
+** Withdraw Money
+
+* Fans
+** Buy & Mint NFT
+*** Royal Point
+*** Convert Royal Point to Tickets ( Fan Meeting )
+**** Burn
+** Donates
+*** Royal Point

@@ -1,0 +1,16 @@
+[package]
+name = "only4fans"
+version = "1.0.0"
+authors = []
+
+[addresses]
+only4fans = "0xc31e8362bdb34fded7db184f46cbcbd328ec264cad47fb11eba38afe877c6c16"
+
+[dev-addresses]
+
+[dependencies.AptosFramework]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "mainnet"
+subdir = "aptos-framework"
+
+[dev-dependencies]
