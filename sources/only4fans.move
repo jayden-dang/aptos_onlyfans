@@ -1,8 +1,20 @@
 module only4fans::only4fans {
     use std::signer;
+    use std::vector;
+    use std::bcs;
+    use aptos_framework::object;
     use aptos_framework::account::{Self, SignerCapability};
     use std::string::String;
     use aptos_framework::event::{Self, EventHandle};
+    use aptos_token_objects::aptos_token::{Self, AptosCollection};
+
+    // Max royalty is 10% (1000 basis points)
+    const MAX_ROYALTY_NUMERATOR: u64 = 1000;
+    const ROYALTY_DENOMINATOR: u64 = 10000;
+
+    const MAX_TOKEN_NAME_LENGTH: u64 = 128;
+    const MAX_URI_LENGTH: u64 = 512;
+    const MAX_U64: u64 = 18446744073709551615;
 
     use only4fans::error_config;
 
@@ -36,7 +48,7 @@ module only4fans::only4fans {
         price: u256
     }
 
-    struct IdolInfo has key {
+    struct IdolInfo has key, copy {
         owner_addr: address,
         name: String,
         username: String,
@@ -48,7 +60,7 @@ module only4fans::only4fans {
         total_collections: u64,
         total_media: u64,
         total_fans: u64,
-        total_likes: u64
+        all_collections: vector<address>,
     }
 
     fun init_module(caller: &signer) {
@@ -102,7 +114,7 @@ module only4fans::only4fans {
             total_collections: 0,
             total_media: 0,
             total_fans: 0,
-            total_likes: 0
+            all_collections: vector::empty<address>()
         });
 
         // let resource_signer_from_cap = account::create_signer_with_capability(&idols_management.resource_cap);
@@ -120,14 +132,88 @@ module only4fans::only4fans {
             }
         )
     }
+
+    public entry fun create_collection(
+        caller: &signer,
+        name: String,
+        description: String,
+        uri: String,
+        price: u64
+    ) acquires IdolInfo {
+        let idol_addr = signer::address_of(caller);
+        assert!(exists<IdolInfo>(idol_addr), error_config::get_eidol_not_exists());
+
+        let seed = generate_random_seed(idol_addr, &name);
+        let (resource_signer, resource_cap) = account::create_resource_account(caller, seed);
+
+        let collection = aptos_token::create_collection_object(
+            &resource_signer,
+            description,
+            MAX_U64,
+            name,
+            uri,
+            true, //mutable_description
+            true, //mutable_royalty
+            true, //mutable_uri
+            true, //mutable_token_description
+            true, //mutable_token_name
+            true, //mutable_token_properties
+            true, //mutable_token_uri
+            false, //tokens_burnable_by_creator
+            false, //tokens_freezable_by_creator
+            0, //royalty_numerator
+            ROYALTY_DENOMINATOR //royalty_denominator
+        );
+
+        let collection_address = object::object_address(&collection);
+
+        move_to(&resource_signer,
+            CollectionInfo {
+                signer_cap: resource_cap,
+                collection,
+                idol_addr,
+                collection_address,
+                price,
+                post_minted: vector::empty<address>()
+            }
+        );
+
+        let idols = borrow_global_mut<IdolInfo>(idol_addr);
+        vector::push_back(&mut idols.all_collections, collection_address);
+
+        idols.total_collections = idols.total_collections + 1;
+    }
+
+    struct CollectionInfo has key {
+        signer_cap: account::SignerCapability,
+        collection: object::Object<AptosCollection>,
+        idol_addr: address,
+        collection_address: address,
+        price: u64,
+        post_minted: vector<address>
+    }
+
+
+    fun generate_random_seed(admin_address: address, name: &String): vector<u8> {
+        let seed = vector::empty<u8>();
+
+        // Add admin address bytes
+        let addr_bytes = bcs::to_bytes(&admin_address);
+        vector::append(&mut seed, addr_bytes);
+
+        // Add collection name bytes
+        let name_bytes = *std::string::bytes(name);
+        vector::append(&mut seed, name_bytes);
+
+        seed
+    }
     // <<<-- Region:: END    <<<---  Idols
 
     // -->>> Region:: START  --->>>  Admin Configuration
-    public entry fun change_fee(caller: &signer, owner_addr: address, new_fee: u256) acquires Only4FansAdmin {
+    public entry fun change_fee(caller: &signer, new_fee: u256) acquires Only4FansAdmin {
         let addr = signer::address_of(caller);
-        let admin_info = borrow_global_mut<Only4FansAdmin>(owner_addr);
-
-        assert!(admin_info.admin == addr, error_config::get_enot_admin());
+        assert!(exists<Only4FansAdmin>(addr), error_config::get_enot_admin());
+        let admin_info = borrow_global_mut<Only4FansAdmin>(addr);
 
         admin_info.fee = new_fee;
     }
@@ -136,6 +222,21 @@ module only4fans::only4fans {
     public fun get_fee(admin: address): u256 acquires Only4FansAdmin {
         let info = borrow_global<Only4FansAdmin>(admin);
         info.fee
+    }
+
+    #[view]
+    public fun get_my_collections(idol_addr: address): vector<address> acquires IdolInfo {
+        borrow_global<IdolInfo>(idol_addr).all_collections
+    }
+
+    #[view]
+    public fun get_profile(idol: address): IdolInfo acquires IdolInfo {
+        *borrow_global<IdolInfo>(idol)
+    }
+
+    #[view]
+    public fun get_object_info(idol: address): object::Object<IdolInfo> {
+        object::address_to_object<IdolInfo>(idol)
     }
     // <<<-- Region:: END    <<<---  Admin Configuration
 

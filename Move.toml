@@ -4,7 +4,7 @@ version = "1.0.0"
 authors = []
 
 [addresses]
-only4fans = "0xc31e8362bdb34fded7db184f46cbcbd328ec264cad47fb11eba38afe877c6c16"
+only4fans = "0x4638214d6419c1c8573c65a43314098c81367c7b3e4ad9cde34e24d053d9d80b"
 
 [dev-addresses]
 
@@ -12,5 +12,10 @@ only4fans = "0xc31e8362bdb34fded7db184f46cbcbd328ec264cad47fb11eba38afe877c6c16"
 git = "https://github.com/aptos-labs/aptos-framework.git"
 rev = "mainnet"
 subdir = "aptos-framework"
+
+[dependencies.AptosTokenObjects]
+git = "https://github.com/aptos-labs/aptos-framework.git"
+rev = "mainnet"
+subdir = "aptos-token-objects"
 
 [dev-dependencies]
