@@ -1,9 +1,9 @@
 - https://cloud.hasura.io/public/graphiql?endpoint=https://api.devnet.aptoslabs.com/v1/graphql
 
 #+begin_src sh :results output :session share
-export CONTRACT_ADDR="0x557a1ee82a1f5b70f9954ae417c17daf17e582afe93908f4a2f70538de309701"
-export IDOL_ADDR="0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb"
-export USER_ADDR="0xb0f9ba0c490140abae84437dfd6a5a2d03063699cd3687c2afb5b43ad00d8cdb"
+export CONTRACT_ADDR="0x13cdb1a578713623dcd7ba67b1a08e8b42afc6ed2202bd25852994dd16344115"
+export IDOL_ADDR="0x6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f"
+export USER_ADDR="0x74a1c415a5b86d4e6631ccac107e1619535c5f68046f5404e69eacd94e54cb13"
 #+end_src
 
 #+RESULTS:
@@ -16,10 +16,10 @@ echo $MACHINE_ADDR
 #+end_src
 
 #+RESULTS:
-: 0x557a1ee82a1f5b70f9954ae417c17daf17e582afe93908f4a2f70538de309701
-: 0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb
-: 0xb0f9ba0c490140abae84437dfd6a5a2d03063699cd3687c2afb5b43ad00d8cdb
-: 0xbcd66606fe1940b544aa2fb00a61a76065c57132bd50dadc20139c320d51bc0d
+: 0x13cdb1a578713623dcd7ba67b1a08e8b42afc6ed2202bd25852994dd16344115
+: 0x6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f
+: 0x74a1c415a5b86d4e6631ccac107e1619535c5f68046f5404e69eacd94e54cb13
+: 0x90af48901e1237a2cfe70b3b33c7d249d39916f8ab8016161ec87be462705edd
 
 * Test CLI Flow
 ** Get Machine Address
@@ -33,12 +33,12 @@ aptos move view \
 #+RESULTS:
 : {
 :   "Result": [
-:     "0x9a18b4f4c64ccf254a7693ebb8f83a2bb45f04fa4f97ddb11bf26a418df0650"
+:     "0x90af48901e1237a2cfe70b3b33c7d249d39916f8ab8016161ec87be462705edd"
 :   ]
 : }
 
 #+begin_src sh :results output :session share
-export MACHINE_ADDR="0x9a18b4f4c64ccf254a7693ebb8f83a2bb45f04fa4f97ddb11bf26a418df0650"
+export MACHINE_ADDR="0x90af48901e1237a2cfe70b3b33c7d249d39916f8ab8016161ec87be462705edd"
 #+end_src
 
 #+RESULTS:
@@ -62,17 +62,17 @@ aptos move run \
 
 #+RESULTS:
 #+begin_example
-Transaction submitted: https://explorer.aptoslabs.com/txn/0xb803ed654485665c24f59fd8c9bb1f2ae66edca71b732f97d4bf42d010e43232?network=devnet
+Transaction submitted: https://explorer.aptoslabs.com/txn/0x8cf7b8206adf0eb5936bfd773cbb1a7e972d1575e9027fb89219f3d139e0cf26?network=devnet
 {
   "Result": {
-    "transaction_hash": "0xb803ed654485665c24f59fd8c9bb1f2ae66edca71b732f97d4bf42d010e43232",
+    "transaction_hash": "0x8cf7b8206adf0eb5936bfd773cbb1a7e972d1575e9027fb89219f3d139e0cf26",
     "gas_used": 474,
     "gas_unit_price": 100,
-    "sender": "83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
-    "sequence_number": 2,
+    "sender": "6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f",
+    "sequence_number": 0,
     "success": true,
-    "timestamp_us": 1743231515710545,
-    "version": 174783521,
+    "timestamp_us": 1743232706445213,
+    "version": 175007089,
     "vm_status": "Executed successfully"
   }
 }
@@ -88,12 +88,12 @@ aptos account list --profile idol
   "Result": [
     {
       "0x1::account::Account": {
-        "authentication_key": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+        "authentication_key": "0x6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f",
         "coin_register_events": {
           "counter": "0",
           "guid": {
             "id": {
-              "addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+              "addr": "0x6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f",
               "creation_num": "0"
             }
           }
@@ -103,7 +103,7 @@ aptos account list --profile idol
           "counter": "0",
           "guid": {
             "id": {
-              "addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+              "addr": "0x6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f",
               "creation_num": "1"
             }
           }
@@ -113,7 +113,7 @@ aptos account list --profile idol
             "vec": []
           }
         },
-        "sequence_number": "3",
+        "sequence_number": "2",
         "signer_capability_offer": {
           "for": {
             "vec": []
@@ -122,32 +122,16 @@ aptos account list --profile idol
       }
     },
     {
-      "0x557a1ee82a1f5b70f9954ae417c17daf17e582afe93908f4a2f70538de309701::only4fans::IdolInfo": {
-        "all_collections": [],
-        "avatar": "avatar",
-        "bio": "Bio",
-        "birthday_year": 1994,
-        "height": 160,
-        "name": "Name",
-        "owner_addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
-        "total_collections": "0",
-        "total_fans": "0",
-        "total_media": "0",
-        "username": "Username",
-        "weight": 60
-      }
-    },
-    {
-      "0x9a203e5dc1f16a05aaa9081ea9099fe6074cd1bbd5a31c3b55f47471d23e83ae::only4fans::IdolInfo": {
+      "0x13cdb1a578713623dcd7ba67b1a08e8b42afc6ed2202bd25852994dd16344115::only4fans::IdolInfo": {
         "all_collections": [
-          "0x889ff2bebb3c3b0254457ffffbb354a5877169bf2e3ef4d5a7d68008bd6682a9"
+          "0x336167c2a558c9bdaa1b8c8253d14ab156127a471fbc75c8dc1d995fb62d7ef8"
         ],
         "avatar": "avatar",
         "bio": "Bio",
         "birthday_year": 1994,
         "height": 160,
         "name": "Name",
-        "owner_addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+        "owner_addr": "0x6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f",
         "total_collections": "1",
         "total_fans": "0",
         "total_media": "0",
@@ -158,13 +142,13 @@ aptos account list --profile idol
     {
       "0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>": {
         "coin": {
-          "value": "99648800"
+          "value": "101029532"
         },
         "deposit_events": {
-          "counter": "1",
+          "counter": "3",
           "guid": {
             "id": {
-              "addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+              "addr": "0x6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f",
               "creation_num": "2"
             }
           }
@@ -174,7 +158,7 @@ aptos account list --profile idol
           "counter": "0",
           "guid": {
             "id": {
-              "addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+              "addr": "0x6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f",
               "creation_num": "3"
             }
           }
@@ -199,17 +183,17 @@ aptos move run \
 
 #+RESULTS:
 #+begin_example
-Transaction submitted: https://explorer.aptoslabs.com/txn/0xa0dae2c9f67395102dc6d1c4c3376b6ae707034e2bc5661925e973fe8ccd0c43?network=devnet
+Transaction submitted: https://explorer.aptoslabs.com/txn/0x9a47ed28512ec11ec42b6378026ac97357ba4c48f5ddc770fb3b0837f008c491?network=devnet
 {
   "Result": {
-    "transaction_hash": "0xa0dae2c9f67395102dc6d1c4c3376b6ae707034e2bc5661925e973fe8ccd0c43",
-    "gas_used": 2538,
+    "transaction_hash": "0x9a47ed28512ec11ec42b6378026ac97357ba4c48f5ddc770fb3b0837f008c491",
+    "gas_used": 2564,
     "gas_unit_price": 100,
-    "sender": "83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
-    "sequence_number": 3,
+    "sender": "6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f",
+    "sequence_number": 1,
     "success": true,
-    "timestamp_us": 1743231545967986,
-    "version": 174783779,
+    "timestamp_us": 1743232736645846,
+    "version": 175013689,
     "vm_status": "Executed successfully"
   }
 }
@@ -227,29 +211,92 @@ aptos move view \
 : {
 :   "Result": [
 :     [
-:       "0xb18824de10896216c599efcb0b1b9b861385f5e7f02d019728d925a11218fddc"
+:       "0x336167c2a558c9bdaa1b8c8253d14ab156127a471fbc75c8dc1d995fb62d7ef8"
 :     ]
 :   ]
 : }
 
 #+begin_src sh :results output :session share
-export COLLECTION_ADDR="0xb18824de10896216c599efcb0b1b9b861385f5e7f02d019728d925a11218fddc"
+export COLLECTION_ADDR="0x336167c2a558c9bdaa1b8c8253d14ab156127a471fbc75c8dc1d995fb62d7ef8"
 #+end_src
 
 #+RESULTS:
 
-** Get owner address
 #+begin_src sh :results output :session share
-aptos move view \
-      --function-id "$CONTRACT_ADDR::only4fans::get_owner_object" \
-      --args \
-        address:$COLLECTION_ADDR
+aptos account list --account $COLLECTION_ADDR
 #+end_src
 
 #+RESULTS:
-: {
-:   "Error": "API error: API error Error(InvalidInput): Failed to execute function: VMError { major_status: ABORTED, sub_status: Some(393218), message: Some(\"0x0000000000000000000000000000000000000000000000000000000000000001::object::address_to_object at offset 14\"), exec_state: Some(ExecutionState { stack_trace: [(Some(ModuleId { address: 557a1ee82a1f5b70f9954ae417c17daf17e582afe93908f4a2f70538de309701, name: Identifier(\"only4fans\") }), FunctionDefinitionIndex(10), 1)] }), location: Module(ModuleId { address: 0000000000000000000000000000000000000000000000000000000000000001, name: Identifier(\"object\") }), indices: [], offsets: [(FunctionDefinitionIndex(6), 14)] }"
-: }
+#+begin_example
+{
+  "Result": [
+    {
+      "0x1::account::Account": {
+        "authentication_key": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "coin_register_events": {
+          "counter": "0",
+          "guid": {
+            "id": {
+              "addr": "0x336167c2a558c9bdaa1b8c8253d14ab156127a471fbc75c8dc1d995fb62d7ef8",
+              "creation_num": "0"
+            }
+          }
+        },
+        "guid_creation_num": "2",
+        "key_rotation_events": {
+          "counter": "0",
+          "guid": {
+            "id": {
+              "addr": "0x336167c2a558c9bdaa1b8c8253d14ab156127a471fbc75c8dc1d995fb62d7ef8",
+              "creation_num": "1"
+            }
+          }
+        },
+        "rotation_capability_offer": {
+          "for": {
+            "vec": []
+          }
+        },
+        "sequence_number": "0",
+        "signer_capability_offer": {
+          "for": {
+            "vec": [
+              "0x336167c2a558c9bdaa1b8c8253d14ab156127a471fbc75c8dc1d995fb62d7ef8"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "0x13cdb1a578713623dcd7ba67b1a08e8b42afc6ed2202bd25852994dd16344115::only4fans::CollectionInfo": {
+        "collection": {
+          "inner": "0x88fc0c661790e8a8520160104a9bb8dac79f2ade307ebcf9120307a4d3caf556"
+        },
+        "collection_address": "0x88fc0c661790e8a8520160104a9bb8dac79f2ade307ebcf9120307a4d3caf556",
+        "idol_addr": "0x6810d5aef5501f19b43caab38913b21ec15f80dda557c66e85fad7b2c2580a7f",
+        "post_minted": [],
+        "price": "666666",
+        "signer_cap": {
+          "account": "0x336167c2a558c9bdaa1b8c8253d14ab156127a471fbc75c8dc1d995fb62d7ef8"
+        },
+        "users_payed": {
+          "buckets": {
+            "inner": {
+              "handle": "0x8a05170b1be61a1dac2b573f9a58460932c8fbeb1ab1902c588ecd4a8eed3eb6"
+            },
+            "length": "2"
+          },
+          "level": 1,
+          "num_buckets": "2",
+          "size": "0",
+          "split_load_threshold": 75,
+          "target_bucket_size": "0"
+        }
+      }
+    }
+  ]
+}
+#+end_example
 
 
 ** Buy Collection
@@ -257,13 +304,113 @@ aptos move view \
 aptos move run \
       --function-id "$CONTRACT_ADDR::only4fans::buy_collection" \
       --args \
-        address:$
-
-#+end_src
-
-** REST
-#+begin_src sh :results output :session share
-curl -X GET "https://fullnode.devnet.aptoslabs.com/v1/accounts/0x59bd42aae55727fb90e5b850d1af20c61853eecce49a16b1d5cc55515fae27d8"
+        address:$COLLECTION_ADDR \
+      --profile user
 #+end_src
 
 #+RESULTS:
+#+begin_example
+Transaction submitted: https://explorer.aptoslabs.com/txn/0xe20d84ac755520ecf744f9b09a3c62a8bd707ee2d954feef26913bae3661b307?network=devnet
+{
+  "Result": {
+    "transaction_hash": "0xe20d84ac755520ecf744f9b09a3c62a8bd707ee2d954feef26913bae3661b307",
+    "gas_used": 32,
+    "gas_unit_price": 100,
+    "sender": "74a1c415a5b86d4e6631ccac107e1619535c5f68046f5404e69eacd94e54cb13",
+    "sequence_number": 0,
+    "success": true,
+    "timestamp_us": 1743232979650040,
+    "version": 175067182,
+    "vm_status": "Executed successfully"
+  }
+}
+#+end_example
+
+#+begin_src sh :results output :session share
+aptos account list --profile user
+#+end_src
+
+#+RESULTS:
+#+begin_example
+{
+  "Result": [
+    {
+      "0x1::account::Account": {
+        "authentication_key": "0x74a1c415a5b86d4e6631ccac107e1619535c5f68046f5404e69eacd94e54cb13",
+        "coin_register_events": {
+          "counter": "0",
+          "guid": {
+            "id": {
+              "addr": "0x74a1c415a5b86d4e6631ccac107e1619535c5f68046f5404e69eacd94e54cb13",
+              "creation_num": "0"
+            }
+          }
+        },
+        "guid_creation_num": "4",
+        "key_rotation_events": {
+          "counter": "0",
+          "guid": {
+            "id": {
+              "addr": "0x74a1c415a5b86d4e6631ccac107e1619535c5f68046f5404e69eacd94e54cb13",
+              "creation_num": "1"
+            }
+          }
+        },
+        "rotation_capability_offer": {
+          "for": {
+            "vec": []
+          }
+        },
+        "sequence_number": "1",
+        "signer_capability_offer": {
+          "for": {
+            "vec": []
+          }
+        }
+      }
+    },
+    {
+      "0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>": {
+        "coin": {
+          "value": "99330134"
+        },
+        "deposit_events": {
+          "counter": "1",
+          "guid": {
+            "id": {
+              "addr": "0x74a1c415a5b86d4e6631ccac107e1619535c5f68046f5404e69eacd94e54cb13",
+              "creation_num": "2"
+            }
+          }
+        },
+        "frozen": false,
+        "withdraw_events": {
+          "counter": "1",
+          "guid": {
+            "id": {
+              "addr": "0x74a1c415a5b86d4e6631ccac107e1619535c5f68046f5404e69eacd94e54cb13",
+              "creation_num": "3"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+#+end_example
+
+** Check Permission
+#+begin_src sh :results output :session share
+aptos move view \
+      --function-id "$CONTRACT_ADDR::only4fans::check_collection_permission" \
+      --args \
+        address:$COLLECTION_ADDR \
+        address:$USER_ADDR
+#+end_src
+
+#+RESULTS:
+: {
+:   "Result": [
+:     true
+:   ]
+: }

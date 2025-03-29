@@ -171,6 +171,7 @@ module only4fans::only4fans {
 
         let collection_address = object::object_address(&collection);
 
+
         move_to(&resource_signer,
             CollectionInfo {
                 signer_cap: resource_cap,
@@ -292,6 +293,14 @@ module only4fans::only4fans {
     #[view]
     public fun get_machine_address(admin: address): address acquires Only4FansAdmin {
         borrow_global<Only4FansAdmin>(admin).machine_address
+    }
+
+    #[view]
+    public fun get_resource_address(user_addr: address, idol_addr: address): address {
+        let seed = vector::empty<u8>();
+        let idol_addr_bytes = bcs::to_bytes(&idol_addr);
+        vector::append(&mut seed, idol_addr_bytes);
+        account::create_resource_address(&user_addr, seed)
     }
 
     fun get_object_info_from_collection_address(collection_addr: address): object::Object<CollectionInfo> {
