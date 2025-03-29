@@ -1,13 +1,269 @@
-* Idols
-** Create Profiles
-*** Create Collections
-*** Create NFT
-** Withdraw Money
+- https://cloud.hasura.io/public/graphiql?endpoint=https://api.devnet.aptoslabs.com/v1/graphql
 
-* Fans
-** Buy & Mint NFT
-*** Royal Point
-*** Convert Royal Point to Tickets ( Fan Meeting )
-**** Burn
-** Donates
-*** Royal Point
+#+begin_src sh :results output :session share
+export CONTRACT_ADDR="0x557a1ee82a1f5b70f9954ae417c17daf17e582afe93908f4a2f70538de309701"
+export IDOL_ADDR="0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb"
+export USER_ADDR="0xb0f9ba0c490140abae84437dfd6a5a2d03063699cd3687c2afb5b43ad00d8cdb"
+#+end_src
+
+#+RESULTS:
+
+#+begin_src sh :results output :session share :async true
+echo $CONTRACT_ADDR
+echo $IDOL_ADDR
+echo $USER_ADDR
+echo $MACHINE_ADDR
+#+end_src
+
+#+RESULTS:
+: 0x557a1ee82a1f5b70f9954ae417c17daf17e582afe93908f4a2f70538de309701
+: 0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb
+: 0xb0f9ba0c490140abae84437dfd6a5a2d03063699cd3687c2afb5b43ad00d8cdb
+: 0xbcd66606fe1940b544aa2fb00a61a76065c57132bd50dadc20139c320d51bc0d
+
+* Test CLI Flow
+** Get Machine Address
+#+begin_src sh :results output :session share :async true
+aptos move view \
+      --function-id "$CONTRACT_ADDR::only4fans::get_machine_address" \
+      --args \
+        address:$CONTRACT_ADDR
+#+end_src
+
+#+RESULTS:
+: {
+:   "Result": [
+:     "0x9a18b4f4c64ccf254a7693ebb8f83a2bb45f04fa4f97ddb11bf26a418df0650"
+:   ]
+: }
+
+#+begin_src sh :results output :session share
+export MACHINE_ADDR="0x9a18b4f4c64ccf254a7693ebb8f83a2bb45f04fa4f97ddb11bf26a418df0650"
+#+end_src
+
+#+RESULTS:
+
+
+** Idol Register
+#+begin_src sh :results output :session share :async true
+aptos move run \
+      --function-id "$CONTRACT_ADDR::only4fans::idol_register" \
+      --args \
+        address:$MACHINE_ADDR \
+        string:"Name" \
+        string:"Username" \
+        u8:160 \
+        u8:60 \
+        u16:1994 \
+        string:"Bio" \
+        string:"avatar" \
+      --profile idol
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Transaction submitted: https://explorer.aptoslabs.com/txn/0xb803ed654485665c24f59fd8c9bb1f2ae66edca71b732f97d4bf42d010e43232?network=devnet
+{
+  "Result": {
+    "transaction_hash": "0xb803ed654485665c24f59fd8c9bb1f2ae66edca71b732f97d4bf42d010e43232",
+    "gas_used": 474,
+    "gas_unit_price": 100,
+    "sender": "83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+    "sequence_number": 2,
+    "success": true,
+    "timestamp_us": 1743231515710545,
+    "version": 174783521,
+    "vm_status": "Executed successfully"
+  }
+}
+#+end_example
+
+#+begin_src sh :results output :session share
+aptos account list --profile idol
+#+end_src
+
+#+RESULTS:
+#+begin_example
+{
+  "Result": [
+    {
+      "0x1::account::Account": {
+        "authentication_key": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+        "coin_register_events": {
+          "counter": "0",
+          "guid": {
+            "id": {
+              "addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+              "creation_num": "0"
+            }
+          }
+        },
+        "guid_creation_num": "4",
+        "key_rotation_events": {
+          "counter": "0",
+          "guid": {
+            "id": {
+              "addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+              "creation_num": "1"
+            }
+          }
+        },
+        "rotation_capability_offer": {
+          "for": {
+            "vec": []
+          }
+        },
+        "sequence_number": "3",
+        "signer_capability_offer": {
+          "for": {
+            "vec": []
+          }
+        }
+      }
+    },
+    {
+      "0x557a1ee82a1f5b70f9954ae417c17daf17e582afe93908f4a2f70538de309701::only4fans::IdolInfo": {
+        "all_collections": [],
+        "avatar": "avatar",
+        "bio": "Bio",
+        "birthday_year": 1994,
+        "height": 160,
+        "name": "Name",
+        "owner_addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+        "total_collections": "0",
+        "total_fans": "0",
+        "total_media": "0",
+        "username": "Username",
+        "weight": 60
+      }
+    },
+    {
+      "0x9a203e5dc1f16a05aaa9081ea9099fe6074cd1bbd5a31c3b55f47471d23e83ae::only4fans::IdolInfo": {
+        "all_collections": [
+          "0x889ff2bebb3c3b0254457ffffbb354a5877169bf2e3ef4d5a7d68008bd6682a9"
+        ],
+        "avatar": "avatar",
+        "bio": "Bio",
+        "birthday_year": 1994,
+        "height": 160,
+        "name": "Name",
+        "owner_addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+        "total_collections": "1",
+        "total_fans": "0",
+        "total_media": "0",
+        "username": "Username",
+        "weight": 60
+      }
+    },
+    {
+      "0x1::coin::CoinStore<0x1::aptos_coin::AptosCoin>": {
+        "coin": {
+          "value": "99648800"
+        },
+        "deposit_events": {
+          "counter": "1",
+          "guid": {
+            "id": {
+              "addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+              "creation_num": "2"
+            }
+          }
+        },
+        "frozen": false,
+        "withdraw_events": {
+          "counter": "0",
+          "guid": {
+            "id": {
+              "addr": "0x83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+              "creation_num": "3"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
+#+end_example
+
+** Idol Create Collection
+#+begin_src sh :results output :session share
+aptos move run \
+      --function-id "$CONTRACT_ADDR::only4fans::create_collection" \
+      --args \
+        string:"name2" \
+        string:"description" \
+        string:"uri" \
+        u64:666666 \
+      --profile idol
+#+end_src
+
+#+RESULTS:
+#+begin_example
+Transaction submitted: https://explorer.aptoslabs.com/txn/0xa0dae2c9f67395102dc6d1c4c3376b6ae707034e2bc5661925e973fe8ccd0c43?network=devnet
+{
+  "Result": {
+    "transaction_hash": "0xa0dae2c9f67395102dc6d1c4c3376b6ae707034e2bc5661925e973fe8ccd0c43",
+    "gas_used": 2538,
+    "gas_unit_price": 100,
+    "sender": "83343393a7c44047d7bf6f49c0a9ef551bd15fb87f2775fb1cafc48b908d2eeb",
+    "sequence_number": 3,
+    "success": true,
+    "timestamp_us": 1743231545967986,
+    "version": 174783779,
+    "vm_status": "Executed successfully"
+  }
+}
+#+end_example
+
+** Get all collections
+#+begin_src sh :results output :session share
+aptos move view \
+      --function-id "$CONTRACT_ADDR::only4fans::get_my_collections" \
+      --args \
+        address:$IDOL_ADDR
+#+end_src
+
+#+RESULTS:
+: {
+:   "Result": [
+:     [
+:       "0xb18824de10896216c599efcb0b1b9b861385f5e7f02d019728d925a11218fddc"
+:     ]
+:   ]
+: }
+
+#+begin_src sh :results output :session share
+export COLLECTION_ADDR="0xb18824de10896216c599efcb0b1b9b861385f5e7f02d019728d925a11218fddc"
+#+end_src
+
+#+RESULTS:
+
+** Get owner address
+#+begin_src sh :results output :session share
+aptos move view \
+      --function-id "$CONTRACT_ADDR::only4fans::get_owner_object" \
+      --args \
+        address:$COLLECTION_ADDR
+#+end_src
+
+#+RESULTS:
+: {
+:   "Error": "API error: API error Error(InvalidInput): Failed to execute function: VMError { major_status: ABORTED, sub_status: Some(393218), message: Some(\"0x0000000000000000000000000000000000000000000000000000000000000001::object::address_to_object at offset 14\"), exec_state: Some(ExecutionState { stack_trace: [(Some(ModuleId { address: 557a1ee82a1f5b70f9954ae417c17daf17e582afe93908f4a2f70538de309701, name: Identifier(\"only4fans\") }), FunctionDefinitionIndex(10), 1)] }), location: Module(ModuleId { address: 0000000000000000000000000000000000000000000000000000000000000001, name: Identifier(\"object\") }), indices: [], offsets: [(FunctionDefinitionIndex(6), 14)] }"
+: }
+
+
+** Buy Collection
+#+begin_src sh :results output :session share
+aptos move run \
+      --function-id "$CONTRACT_ADDR::only4fans::buy_collection" \
+      --args \
+        address:$
+
+#+end_src
+
+** REST
+#+begin_src sh :results output :session share
+curl -X GET "https://fullnode.devnet.aptoslabs.com/v1/accounts/0x59bd42aae55727fb90e5b850d1af20c61853eecce49a16b1d5cc55515fae27d8"
+#+end_src
+
+#+RESULTS:

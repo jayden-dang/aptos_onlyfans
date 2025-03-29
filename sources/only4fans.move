@@ -2,10 +2,14 @@ module only4fans::only4fans {
     use std::signer;
     use std::vector;
     use std::bcs;
+    use aptos_framework::timestamp;
+    use aptos_std::smart_table::{Self, SmartTable};
     use aptos_framework::object;
     use aptos_framework::account::{Self, SignerCapability};
     use std::string::String;
     use aptos_framework::event::{Self, EventHandle};
+    use aptos_framework::coin;
+    use aptos_framework::aptos_coin::AptosCoin;
     use aptos_token_objects::aptos_token::{Self, AptosCollection};
 
     // Max royalty is 10% (1000 basis points)
@@ -174,12 +178,13 @@ module only4fans::only4fans {
                 idol_addr,
                 collection_address,
                 price,
-                post_minted: vector::empty<address>()
+                post_minted: vector::empty<address>(),
+                users_payed: smart_table::new<address, u64>()
             }
         );
 
         let idols = borrow_global_mut<IdolInfo>(idol_addr);
-        vector::push_back(&mut idols.all_collections, collection_address);
+        vector::push_back(&mut idols.all_collections, signer::address_of(&resource_signer));
 
         idols.total_collections = idols.total_collections + 1;
     }
@@ -190,9 +195,53 @@ module only4fans::only4fans {
         idol_addr: address,
         collection_address: address,
         price: u64,
-        post_minted: vector<address>
+        post_minted: vector<address>,
+        users_payed: SmartTable<address, u64>
     }
 
+    // <<<-- Region:: END    <<<---  Idols
+
+    // -->>> Region:: START  --->>>  Users
+    public entry fun buy_collection(
+        caller: &signer,
+        collection_address: address
+    ) acquires CollectionInfo {
+        assert!(exists<CollectionInfo>(collection_address), error_config::get_ecollection_not_exists());
+        let collection_info = borrow_global_mut<CollectionInfo>(collection_address);
+        coin::transfer<AptosCoin>(caller, collection_info.idol_addr, collection_info.price);
+
+        let user_addr = signer::address_of(caller);
+
+        let payed = smart_table::contains<address, u64>(&mut collection_info.users_payed, user_addr);
+        if (payed) {
+            let valid_time = smart_table::borrow<address, u64>(&mut collection_info.users_payed, user_addr);
+            assert!(check_valid_time(*valid_time), error_config::get_euser_already_payed());
+        } else {
+            smart_table::upsert(&mut collection_info.users_payed, user_addr, timestamp::now_seconds() + 1_000_000_000);
+        }
+    }
+
+    #[view]
+    public fun check_collection_permission(collection_addr: address, user_addr: address): bool acquires CollectionInfo {
+        let collection_info = borrow_global_mut<CollectionInfo>(collection_addr);
+        if (smart_table::contains<address, u64>(&mut collection_info.users_payed, user_addr)) {
+            let valid_time = smart_table::borrow<address, u64>(&mut collection_info.users_payed, user_addr);
+            return check_valid_time(*valid_time)
+        } else {
+            return false
+        }
+    }
+    // <<<-- Region:: END    <<<---  Users
+
+    // -->>> Region:: START  --->>>  Helper Function
+    fun check_valid_time(time: u64): bool {
+        let now = timestamp::now_seconds();
+        if (time < now) {
+            false
+        } else {
+            true
+        }
+    }
 
     fun generate_random_seed(admin_address: address, name: &String): vector<u8> {
         let seed = vector::empty<u8>();
@@ -207,7 +256,7 @@ module only4fans::only4fans {
 
         seed
     }
-    // <<<-- Region:: END    <<<---  Idols
+    // <<<-- Region:: END    <<<---  Helper Function
 
     // -->>> Region:: START  --->>>  Admin Configuration
     public entry fun change_fee(caller: &signer, new_fee: u256) acquires Only4FansAdmin {
@@ -235,8 +284,18 @@ module only4fans::only4fans {
     }
 
     #[view]
-    public fun get_object_info(idol: address): object::Object<IdolInfo> {
-        object::address_to_object<IdolInfo>(idol)
+    public fun get_owner_object(collection_address: address): address {
+        let obj = object::address_to_object<CollectionInfo>(collection_address);
+        object::owner<CollectionInfo>(obj)
+    }
+
+    #[view]
+    public fun get_machine_address(admin: address): address acquires Only4FansAdmin {
+        borrow_global<Only4FansAdmin>(admin).machine_address
+    }
+
+    fun get_object_info_from_collection_address(collection_addr: address): object::Object<CollectionInfo> {
+        object::address_to_object<CollectionInfo>(collection_addr)
     }
     // <<<-- Region:: END    <<<---  Admin Configuration
 
